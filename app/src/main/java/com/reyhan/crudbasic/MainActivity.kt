@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.reyhan.crudbasic.adapter.MyRecyclerViewAdapter
 import com.reyhan.crudbasic.databinding.ActivityMainBinding
 import com.reyhan.crudbasic.db.SubscribeDB
+import com.reyhan.crudbasic.db.Subscriber
 import com.reyhan.crudbasic.repostitory.SubscriberRepository
 
 class MainActivity : AppCompatActivity() {
@@ -34,15 +35,21 @@ class MainActivity : AppCompatActivity() {
         initRecyclerView()
     }
 
-    private fun initRecyclerView(){
+    private fun initRecyclerView() {
         binding.subscriberRecyclerView.layoutManager = LinearLayoutManager(this)
         displaySubscriberList()
     }
 
-    private fun displaySubscriberList(){
+    private fun displaySubscriberList() {
         subscriberViewModel.subscribers.observe(this, Observer {
             Log.i("TAG", "displaySubscriberList: @it")
-            binding.subscriberRecyclerView.adapter = MyRecyclerViewAdapter(it)
+            binding.subscriberRecyclerView.adapter = MyRecyclerViewAdapter(
+                it
+            ) { selectedItem: Subscriber -> listItemClicked(selectedItem) }
         })
+    }
+
+    private fun listItemClicked(subscriber: Subscriber) {
+        subscriberViewModel.initUpdateAndDelete(subscriber)
     }
 }
